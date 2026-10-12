@@ -24,7 +24,7 @@ jobs:
       with:
         gradle-version: '8.6'
 
-    - name: Extract Project ZIP & Fix Resource Linking
+    - name: Extract Project ZIP & Fix Styles and Attributes
       run: |
         set -e
         ZIP_FILE=$(find . -maxdepth 1 -iname "*.zip" | head -n 1)
@@ -70,11 +70,14 @@ jobs:
         echo '<?xml version="1.0" encoding="utf-8"?><selector xmlns:android="http://schemas.android.com/apk/res/android"><item android:state_checked="true" android:color="#FF7A00"/><item android:color="#888888"/></selector>' > app/src/main/res/color/selector_nav_color.xml
         echo '<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp"><TextView android:id="@+id/menuTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#000000"/></LinearLayout>' > app/src/main/res/layout/item_funds_menu.xml
 
-        # 4. Create attrs.xml
-        echo '<?xml version="1.0" encoding="utf-8"?><resources><declare-styleable name="CustomStyleAttrs"><attr name="helperTextColor" format="color|reference"/></declare-styleable></resources>' > app/src/main/res/values/attrs.xml
+        # 4. Create styles.xml with VpinBoxStyle
+        echo '<?xml version="1.0" encoding="utf-8"?><resources><style name="VpinBoxStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox"><item name="boxStrokeColor">#FF7A00</item></style><style name="Widget.RAMA77" parent="Widget.MaterialComponents.CardView"><item name="cardCornerRadius">12dp</item></style></resources>' > app/src/main/res/values/styles.xml
 
-        # 5. Inject clean styles into styles.xml
-        echo '<?xml version="1.0" encoding="utf-8"?><resources><style name="Widget.RAMA77" parent="Widget.MaterialComponents.CardView"><item name="cardCornerRadius">12dp</item><item name="cardElevation">4dp</item></style><style name="VpinBoxStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox"><item name="boxStrokeColor">#FF7A00</item></style></resources>' > app/src/main/res/values/styles.xml
+        # 5. Inject VpinBoxStyle into themes.xml as well
+        THEMES_FILE="app/src/main/res/values/themes.xml"
+        if [ -f "$THEMES_FILE" ]; then
+          sed -i 's/<\/resources>/    <style name="VpinBoxStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">\n        <item name="boxStrokeColor">#FF7A00<\/item>\n    <\/style>\n    <style name="Widget.RAMA77" parent="Widget.MaterialComponents.CardView">\n        <item name="cardCornerRadius">12dp<\/item>\n    <\/style>\n<\/resources>/g' "$THEMES_FILE" || true
+        fi
 
         # 6. Fix strings.xml & CardView namespace
         STRINGS_FILE="app/src/main/res/values/strings.xml"
