@@ -24,7 +24,7 @@ jobs:
       with:
         gradle-version: '8.6'
 
-    - name: Extract Project ZIP & Auto-Fix XML Errors
+    - name: Extract Project ZIP & Auto-Fix Resource References
       run: |
         set -e
         ZIP_FILE=$(find . -maxdepth 1 -iname "*.zip" | head -n 1)
@@ -53,6 +53,21 @@ jobs:
         if [ -f "$SUPPORT_FILE" ]; then
           echo "Checking and fixing fragment_support.xml..."
           sed -i 's/<androidx.cardview.widget.CardView/<androidx.cardview.widget.CardView xmlns:app="http:\/\/schemas.android.com\/apk\/res-auto"/g' "$SUPPORT_FILE" || true
+        fi
+
+        # Auto-fix 3: Add missing Widget.RAMA77 style in styles/themes XML to pass AAPT linking
+        THEMES_FILE="app/src/main/res/values/themes.xml"
+        STYLES_FILE="app/src/main/res/values/styles.xml"
+        TARGET_FILE=""
+        if [ -f "$THEMES_FILE" ]; then
+          TARGET_FILE="$THEMES_FILE"
+        elif [ -f "$STYLES_FILE" ]; then
+          TARGET_FILE="$STYLES_FILE"
+        fi
+
+        if [ -n "$TARGET_FILE" ]; then
+          echo "Adding missing Widget.RAMA77 style to $TARGET_FILE..."
+          sed -i 's/<\/resources>/    <style name="Widget.RAMA77" parent="Widget.MaterialComponents.CardView">\n        <item name="cardCornerRadius">12dp<\/item>\n        <item name="cardElevation">4dp<\/item>\n    <\/style>\n<\/resources>/g' "$TARGET_FILE" || true
         fi
 
     - name: Grant Execute Permission for Gradle
