@@ -70,13 +70,17 @@ jobs:
         echo '<?xml version="1.0" encoding="utf-8"?><selector xmlns:android="http://schemas.android.com/apk/res/android"><item android:state_checked="true" android:color="#FF7A00"/><item android:color="#888888"/></selector>' > app/src/main/res/color/selector_nav_color.xml
         echo '<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp"><TextView android:id="@+id/menuTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#000000"/></LinearLayout>' > app/src/main/res/layout/item_funds_menu.xml
 
-        # 4. Inject styles explicitly into styles.xml
-        echo '<?xml version="1.0" encoding="utf-8"?><resources><style name="Widget.RAMA77" parent="Widget.MaterialComponents.CardView"><item name="cardCornerRadius">12dp</item><item name="cardElevation">4dp</item></style><style name="VpinBoxStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox"><item name="boxStrokeColor">#FF7A00</item></style></resources>' > app/src/main/res/values/styles_fix.xml
+        # 4. Inject styles directly into styles.xml and themes.xml
+        echo '<?xml version="1.0" encoding="utf-8"?><resources><style name="VpinBoxStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox"><item name="boxStrokeColor">#FF7A00</item></style><style name="Widget.RAMA77" parent="Widget.MaterialComponents.CardView"><item name="cardCornerRadius">12dp</item></style></resources>' > app/src/main/res/values/styles.xml
 
-        # 5. Force layout replacements for direct string occurrences
-        find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/style="@style\/VpinBoxStyle"/style="@style\/Widget.MaterialComponents.TextInputLayout.OutlinedBox"/g' {} + || true
-        find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/style="@style\/Widget.RAMA77"/style="@style\/Widget.MaterialComponents.CardView"/g' {} + || true
-        find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/app:helperTextColor="[^"]*"/app:helperTextTextColor="#888888"/g' {} + || true
+        THEMES_FILE="app/src/main/res/values/themes.xml"
+        if [ -f "$THEMES_FILE" ]; then
+          sed -i 's/<\/resources>/    <style name="VpinBoxStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox"><item name="boxStrokeColor">#FF7A00<\/item><\/style>\n    <style name="Widget.RAMA77" parent="Widget.MaterialComponents.CardView"><item name="cardCornerRadius">12dp<\/item><\/style>\n<\/resources>/g' "$THEMES_FILE" || true
+        fi
+
+        # 5. Direct replacement inside layouts for safety
+        find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/VpinBoxStyle/Widget.MaterialComponents.TextInputLayout.OutlinedBox/g' {} + || true
+        find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/Widget.RAMA77/Widget.MaterialComponents.CardView/g' {} + || true
 
         # 6. Fix strings.xml & CardView namespace
         STRINGS_FILE="app/src/main/res/values/strings.xml"
