@@ -24,7 +24,7 @@ jobs:
       with:
         gradle-version: '8.6'
 
-    - name: Extract Project ZIP & Prepare Structure
+    - name: Extract Project ZIP & Auto-Fix XML Errors
       run: |
         set -e
         ZIP_FILE=$(find . -maxdepth 1 -iname "*.zip" | head -n 1)
@@ -32,7 +32,6 @@ jobs:
           echo "Extracting $ZIP_FILE..."
           unzip -o "$ZIP_FILE" -d extracted_project
           
-          # Find root folder containing settings.gradle or settings.gradle.kts
           PROJECT_ROOT=$(find extracted_project -name "settings.gradle*" -exec dirname {} \;)
           
           if [ -n "$PROJECT_ROOT" ]; then
@@ -40,6 +39,13 @@ jobs:
             cp -r $PROJECT_ROOT/* .
             cp -r $PROJECT_ROOT/.* . 2>/dev/null || true
           fi
+        fi
+
+        # Auto-fix strings.xml unescaped quote issue
+        STRINGS_FILE="app/src/main/res/values/strings.xml"
+        if [ -f "$STRINGS_FILE" ]; then
+          echo "Checking and fixing strings.xml..."
+          sed -i "s/Don't have an account?/Don\\\'t have an account?/g" "$STRINGS_FILE" || true
         fi
 
     - name: Grant Execute Permission for Gradle
