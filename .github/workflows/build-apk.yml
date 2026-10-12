@@ -73,14 +73,11 @@ jobs:
         # 4. Create missing attrs.xml
         echo '<?xml version="1.0" encoding="utf-8"?><resources><declare-styleable name="CustomAttrs"><attr name="helperTextColor" format="color|reference"/></declare-styleable></resources>' > app/src/main/res/values/attrs.xml
 
-        # 5. Inject styles in values/styles.xml safely
-        echo '<?xml version="1.0" encoding="utf-8"?><resources><style name="VpinBoxStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox"><item name="boxStrokeColor">#FF7A00</item></style><style name="Widget.RAMA77" parent="Widget.MaterialComponents.CardView"><item name="cardCornerRadius">12dp</item></style></resources>' > app/src/main/res/values/styles_rama.xml
-
-        # 6. Replace problematic style reference in layout files if needed
-        find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/@style\/VpinBoxStyle/@style\/Widget.MaterialComponents.TextInputLayout.OutlinedBox/g' {} + || true
+        # 5. Replace VpinBoxStyle directly in XML layout files to resolve AAPT linking
+        find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/style="@style\/VpinBoxStyle"/style="@style\/Widget.MaterialComponents.TextInputLayout.OutlinedBox"/g' {} + || true
         find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/app:helperTextColor="[^"]*"/app:helperTextTextColor="#888888"/g' {} + || true
 
-        # 7. Fix strings.xml & CardView namespace
+        # 6. Fix strings.xml & CardView namespace
         STRINGS_FILE="app/src/main/res/values/strings.xml"
         if [ -f "$STRINGS_FILE" ]; then
           sed -i "s/Don't have an account?/Don\\\'t have an account?/g" "$STRINGS_FILE" || true
