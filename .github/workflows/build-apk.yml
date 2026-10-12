@@ -24,7 +24,7 @@ jobs:
       with:
         gradle-version: '8.6'
 
-    - name: Extract Project ZIP & Generate Missing Resources
+    - name: Extract Project ZIP & Complete Resource Fix
       run: |
         set -e
         ZIP_FILE=$(find . -maxdepth 1 -iname "*.zip" | head -n 1)
@@ -74,13 +74,22 @@ jobs:
         # 5. Create missing item_funds_menu layout
         echo '<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp"><TextView android:id="@+id/menuTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#000000"/></LinearLayout>' > app/src/main/res/layout/item_funds_menu.xml
 
-        # 6. Inject missing styles into themes.xml
-        THEMES_FILE="app/src/main/res/values/themes.xml"
-        if [ -f "$THEMES_FILE" ]; then
-          sed -i 's/<\/resources>/    <style name="Widget.RAMA77" parent="Widget.MaterialComponents.CardView">\n        <item name="cardCornerRadius">12dp<\/item>\n        <item name="cardElevation">4dp<\/item>\n    <\/style>\n    <style name="VpinBoxStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">\n        <item name="boxStrokeColor">#FF7A00<\/item>\n    <\/style>\n<\/resources>/g' "$THEMES_FILE" || true
+        # 6. Inject styles into themes.xml AND styles.xml
+        STYLE_DECL='    <style name="Widget.RAMA77" parent="Widget.MaterialComponents.CardView">\n        <item name="cardCornerRadius">12dp<\/item>\n        <item name="cardElevation">4dp<\/item>\n    <\/style>\n    <style name="VpinBoxStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">\n        <item name="boxStrokeColor">#FF7A00<\/item>\n    <\/style>'
+
+        for SFILE in app/src/main/res/values/themes.xml app/src/main/res/values/styles.xml; do
+          if [ -f "$SFILE" ]; then
+            sed -i "s/<\/resources>/$STYLE_DECL\n<\/resources>/g" "$SFILE" || true
+          fi
+        done
+
+        # 7. Fix helperTextColor attribute in register xml if non-standard
+        REG_FILE="app/src/main/res/layout/activity_register.xml"
+        if [ -f "$REG_FILE" ]; then
+          sed -i 's/helperTextColor/app:helperTextTextColor/g' "$REG_FILE" || true
         fi
 
-        # 7. Fix strings.xml & CardView namespace
+        # 8. Fix strings.xml & CardView namespace
         STRINGS_FILE="app/src/main/res/values/strings.xml"
         if [ -f "$STRINGS_FILE" ]; then
           sed -i "s/Don't have an account?/Don\\\'t have an account?/g" "$STRINGS_FILE" || true
