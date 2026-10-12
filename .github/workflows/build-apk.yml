@@ -24,30 +24,22 @@ jobs:
       with:
         gradle-version: '8.6'
 
-    - name: Extract Project ZIP & Fix Missing Styles/Attrs
+    - name: Extract Project ZIP & Universal Fixes
       run: |
         set -e
         ZIP_FILE=$(find . -maxdepth 1 -iname "*.zip" | head -n 1)
         if [ -n "$ZIP_FILE" ]; then
-          echo "Extracting $ZIP_FILE..."
           unzip -o "$ZIP_FILE" -d extracted_project
-          
           PROJECT_ROOT=$(find extracted_project -name "settings.gradle*" -exec dirname {} \;)
           if [ -n "$PROJECT_ROOT" ]; then
-            echo "Moving extracted files to root directory..."
             cp -r $PROJECT_ROOT/* .
             cp -r $PROJECT_ROOT/.* . 2>/dev/null || true
           fi
         fi
 
-        mkdir -p app/src/main/res/xml
-        mkdir -p app/src/main/res/mipmap-anydpi-v26
-        mkdir -p app/src/main/res/drawable
-        mkdir -p app/src/main/res/layout
-        mkdir -p app/src/main/res/values
-        mkdir -p app/src/main/res/color
+        mkdir -p app/src/main/res/xml app/src/main/res/mipmap-anydpi-v26 app/src/main/res/drawable app/src/main/res/layout app/src/main/res/values app/src/main/res/color
 
-        # 1. Standard XML rules
+        # 1. XML rules
         echo '<?xml version="1.0" encoding="utf-8"?><data-extraction-rules><cloud-backup disableIfNoEncryptionCapabilities="true"/></data-extraction-rules>' > app/src/main/res/xml/data_extraction_rules.xml
         echo '<?xml version="1.0" encoding="utf-8"?><full-backup-content/>' > app/src/main/res/xml/backup_rules.xml
 
@@ -70,14 +62,12 @@ jobs:
         echo '<?xml version="1.0" encoding="utf-8"?><selector xmlns:android="http://schemas.android.com/apk/res/android"><item android:state_checked="true" android:color="#FF7A00"/><item android:color="#888888"/></selector>' > app/src/main/res/color/selector_nav_color.xml
         echo '<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp"><TextView android:id="@+id/menuTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#000000"/></LinearLayout>' > app/src/main/res/layout/item_funds_menu.xml
 
-        # 4. Create missing attrs.xml
-        echo '<?xml version="1.0" encoding="utf-8"?><resources><declare-styleable name="CustomAttrs"><attr name="helperTextColor" format="color|reference"/></declare-styleable></resources>' > app/src/main/res/values/attrs.xml
-
-        # 5. Replace VpinBoxStyle directly in XML layout files to resolve AAPT linking
+        # 4. Universal layout clean (replaces custom styles with standard components)
         find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/style="@style\/VpinBoxStyle"/style="@style\/Widget.MaterialComponents.TextInputLayout.OutlinedBox"/g' {} + || true
+        find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/style="@style\/Widget.RAMA77"/style="@style\/Widget.MaterialComponents.CardView"/g' {} + || true
         find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/app:helperTextColor="[^"]*"/app:helperTextTextColor="#888888"/g' {} + || true
 
-        # 6. Fix strings.xml & CardView namespace
+        # 5. Fix strings.xml & CardView namespace
         STRINGS_FILE="app/src/main/res/values/strings.xml"
         if [ -f "$STRINGS_FILE" ]; then
           sed -i "s/Don't have an account?/Don\\\'t have an account?/g" "$STRINGS_FILE" || true
