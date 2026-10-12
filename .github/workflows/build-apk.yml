@@ -24,7 +24,7 @@ jobs:
       with:
         gradle-version: '8.6'
 
-    - name: Extract Project ZIP & Apply Clean Resource Fixes
+    - name: Extract Project ZIP & Full Automated Sanitization
       run: |
         set -e
         ZIP_FILE=$(find . -maxdepth 1 -iname "*.zip" | head -n 1)
@@ -34,24 +34,18 @@ jobs:
           
           PROJECT_ROOT=$(find extracted_project -name "settings.gradle*" -exec dirname {} \;)
           if [ -n "$PROJECT_ROOT" ]; then
-            echo "Moving extracted files to root directory..."
             cp -r $PROJECT_ROOT/* .
             cp -r $PROJECT_ROOT/.* . 2>/dev/null || true
           fi
         fi
 
-        mkdir -p app/src/main/res/xml
-        mkdir -p app/src/main/res/mipmap-anydpi-v26
-        mkdir -p app/src/main/res/drawable
-        mkdir -p app/src/main/res/layout
-        mkdir -p app/src/main/res/values
-        mkdir -p app/src/main/res/color
+        mkdir -p app/src/main/res/xml app/src/main/res/mipmap-anydpi-v26 app/src/main/res/drawable app/src/main/res/layout app/src/main/res/values app/src/main/res/color
 
-        # 1. Rules
+        # 1. Generate core XML fallback rules
         echo '<?xml version="1.0" encoding="utf-8"?><data-extraction-rules><cloud-backup disableIfNoEncryptionCapabilities="true"/></data-extraction-rules>' > app/src/main/res/xml/data_extraction_rules.xml
         echo '<?xml version="1.0" encoding="utf-8"?><full-backup-content/>' > app/src/main/res/xml/backup_rules.xml
 
-        # 2. Icons
+        # 2. Adaptive Icons and fallback brand logo
         echo '<?xml version="1.0" encoding="utf-8"?><adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android"><background android:drawable="@android:color/white"/><foreground android:drawable="@drawable/ic_rama77_brand_logo"/></adaptive-icon>' > app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
         echo '<?xml version="1.0" encoding="utf-8"?><adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android"><background android:drawable="@android:color/white"/><foreground android:drawable="@drawable/ic_rama77_brand_logo"/></adaptive-icon>' > app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
 
@@ -59,7 +53,7 @@ jobs:
           echo '<vector xmlns:android="http://schemas.android.com/apk/android" android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108"><path android:fillColor="#FF7A00" android:pathData="M0,0h108v108h-108z"/></vector>' > app/src/main/res/drawable/ic_rama77_brand_logo.xml
         fi
 
-        # 3. Colors & Selectors
+        # 3. Inject Missing Colors & Navigation Selectors
         COLORS_FILE="app/src/main/res/values/colors.xml"
         if [ -f "$COLORS_FILE" ]; then
           sed -i 's/<\/resources>/    <color name="bg_dark">#121212<\/color>\n    <color name="toolbar_dark">#1E1E1E<\/color>\n    <color name="helperTextColor">#888888<\/color>\n<\/resources>/g' "$COLORS_FILE" || true
@@ -70,12 +64,15 @@ jobs:
         echo '<?xml version="1.0" encoding="utf-8"?><selector xmlns:android="http://schemas.android.com/apk/res/android"><item android:state_checked="true" android:color="#FF7A00"/><item android:color="#888888"/></selector>' > app/src/main/res/color/selector_nav_color.xml
         echo '<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp"><TextView android:id="@+id/menuTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#000000"/></LinearLayout>' > app/src/main/res/layout/item_funds_menu.xml
 
-        # 4. Pure Layout Replacement (bypasses duplicate resource collision in styles/themes)
-        find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/style="@style\/VpinBoxStyle"/style="@style\/Widget.MaterialComponents.TextInputLayout.OutlinedBox"/g' {} + || true
-        find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/style="@style\/Widget.RAMA77"/style="@style\/Widget.MaterialComponents.CardView"/g' {} + || true
+        # 4. Inject exact definitions in styles.xml to catch all AAPT link passes
+        echo '<?xml version="1.0" encoding="utf-8"?><resources><style name="Widget.RAMA77" parent="Widget.MaterialComponents.CardView"><item name="cardCornerRadius">12dp</item></style><style name="VpinBoxStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox"><item name="boxStrokeColor">#FF7A00</item></style></resources>' > app/src/main/res/values/styles.xml
+
+        # 5. Global sweep across all project files to strip out direct style dependencies
+        grep -rl "Widget.RAMA77" app/src/main/res/ | xargs sed -i 's/Widget\.RAMA77/Widget\.MaterialComponents\.CardView/g' || true
+        grep -rl "VpinBoxStyle" app/src/main/res/ | xargs sed -i 's/VpinBoxStyle/Widget\.MaterialComponents\.TextInputLayout\.OutlinedBox/g' || true
         find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/app:helperTextColor="[^"]*"/app:helperTextTextColor="#888888"/g' {} + || true
 
-        # 5. Fix strings.xml & CardView namespace
+        # 6. Syntax sanitization
         STRINGS_FILE="app/src/main/res/values/strings.xml"
         if [ -f "$STRINGS_FILE" ]; then
           sed -i "s/Don't have an account?/Don\\\'t have an account?/g" "$STRINGS_FILE" || true
