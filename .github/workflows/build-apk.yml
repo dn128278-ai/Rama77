@@ -41,11 +41,18 @@ jobs:
           fi
         fi
 
-        # Auto-fix strings.xml unescaped quote issue
+        # Auto-fix 1: strings.xml unescaped quote issue
         STRINGS_FILE="app/src/main/res/values/strings.xml"
         if [ -f "$STRINGS_FILE" ]; then
           echo "Checking and fixing strings.xml..."
           sed -i "s/Don't have an account?/Don\\\'t have an account?/g" "$STRINGS_FILE" || true
+        fi
+
+        # Auto-fix 2: fragment_support.xml missing xmlns:app namespace issue
+        SUPPORT_FILE="app/src/main/res/layout/fragment_support.xml"
+        if [ -f "$SUPPORT_FILE" ]; then
+          echo "Checking and fixing fragment_support.xml..."
+          sed -i 's/<androidx.cardview.widget.CardView/<androidx.cardview.widget.CardView xmlns:app="http:\/\/schemas.android.com\/apk\/res-auto"/g' "$SUPPORT_FILE" || true
         fi
 
     - name: Grant Execute Permission for Gradle
