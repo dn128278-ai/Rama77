@@ -24,7 +24,7 @@ jobs:
       with:
         gradle-version: '8.6'
 
-    - name: Extract Project ZIP & Auto Fixes
+    - name: Extract Project ZIP & Generate Missing Resources
       run: |
         set -e
         ZIP_FILE=$(find . -maxdepth 1 -iname "*.zip" | head -n 1)
@@ -40,15 +40,19 @@ jobs:
           fi
         fi
 
-        # 1. Create missing XML rules
+        # Create necessary directories
         mkdir -p app/src/main/res/xml
+        mkdir -p app/src/main/res/mipmap-anydpi-v26
+        mkdir -p app/src/main/res/drawable
+        mkdir -p app/src/main/res/layout
+        mkdir -p app/src/main/res/values
+        mkdir -p app/src/main/res/color
+
+        # 1. Create missing XML rules
         echo '<?xml version="1.0" encoding="utf-8"?><data-extraction-rules><cloud-backup disableIfNoEncryptionCapabilities="true"/></data-extraction-rules>' > app/src/main/res/xml/data_extraction_rules.xml
         echo '<?xml version="1.0" encoding="utf-8"?><full-backup-content/>' > app/src/main/res/xml/backup_rules.xml
 
-        # 2. Ensure launcher icons exist
-        mkdir -p app/src/main/res/mipmap-anydpi-v26
-        mkdir -p app/src/main/res/drawable
-        
+        # 2. Launcher & Brand icons
         echo '<?xml version="1.0" encoding="utf-8"?><adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android"><background android:drawable="@android:color/white"/><foreground android:drawable="@drawable/ic_rama77_brand_logo"/></adaptive-icon>' > app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
         echo '<?xml version="1.0" encoding="utf-8"?><adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android"><background android:drawable="@android:color/white"/><foreground android:drawable="@drawable/ic_rama77_brand_logo"/></adaptive-icon>' > app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
 
@@ -56,22 +60,35 @@ jobs:
           echo '<vector xmlns:android="http://schemas.android.com/apk/android" android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108"><path android:fillColor="#FF7A00" android:pathData="M0,0h108v108h-108z"/></vector>' > app/src/main/res/drawable/ic_rama77_brand_logo.xml
         fi
 
-        # 3. Fix strings.xml unescaped quotes
+        # 3. Add missing colors to colors.xml
+        COLORS_FILE="app/src/main/res/values/colors.xml"
+        if [ -f "$COLORS_FILE" ]; then
+          sed -i 's/<\/resources>/    <color name="bg_dark">#121212<\/color>\n    <color name="toolbar_dark">#1E1E1E<\/color>\n<\/resources>/g' "$COLORS_FILE" || true
+        else
+          echo '<?xml version="1.0" encoding="utf-8"?><resources><color name="bg_dark">#121212</color><color name="toolbar_dark">#1E1E1E</color></resources>' > "$COLORS_FILE"
+        fi
+
+        # 4. Create missing selector_nav_color
+        echo '<?xml version="1.0" encoding="utf-8"?><selector xmlns:android="http://schemas.android.com/apk/res/android"><item android:state_checked="true" android:color="#FF7A00"/><item android:color="#888888"/></selector>' > app/src/main/res/color/selector_nav_color.xml
+
+        # 5. Create missing item_funds_menu layout
+        echo '<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp"><TextView android:id="@+id/menuTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#000000"/></LinearLayout>' > app/src/main/res/layout/item_funds_menu.xml
+
+        # 6. Inject missing styles into themes.xml
+        THEMES_FILE="app/src/main/res/values/themes.xml"
+        if [ -f "$THEMES_FILE" ]; then
+          sed -i 's/<\/resources>/    <style name="Widget.RAMA77" parent="Widget.MaterialComponents.CardView">\n        <item name="cardCornerRadius">12dp<\/item>\n        <item name="cardElevation">4dp<\/item>\n    <\/style>\n    <style name="VpinBoxStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">\n        <item name="boxStrokeColor">#FF7A00<\/item>\n    <\/style>\n<\/resources>/g' "$THEMES_FILE" || true
+        fi
+
+        # 7. Fix strings.xml & CardView namespace
         STRINGS_FILE="app/src/main/res/values/strings.xml"
         if [ -f "$STRINGS_FILE" ]; then
           sed -i "s/Don't have an account?/Don\\\'t have an account?/g" "$STRINGS_FILE" || true
         fi
 
-        # 4. Fix fragment_support.xml CardView namespace
         SUPPORT_FILE="app/src/main/res/layout/fragment_support.xml"
         if [ -f "$SUPPORT_FILE" ]; then
           sed -i 's/<androidx.cardview.widget.CardView/<androidx.cardview.widget.CardView xmlns:app="http:\/\/schemas.android.com\/apk\/res-auto"/g' "$SUPPORT_FILE" || true
-        fi
-
-        # 5. Inject Widget.RAMA77 style
-        THEMES_FILE="app/src/main/res/values/themes.xml"
-        if [ -f "$THEMES_FILE" ]; then
-          sed -i 's/<\/resources>/    <style name="Widget.RAMA77" parent="Widget.MaterialComponents.CardView">\n        <item name="cardCornerRadius">12dp<\/item>\n        <item name="cardElevation">4dp<\/item>\n    <\/style>\n<\/resources>/g' "$THEMES_FILE" || true
         fi
 
     - name: Grant Execute Permission for Gradle
