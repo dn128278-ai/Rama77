@@ -24,7 +24,7 @@ jobs:
       with:
         gradle-version: '8.6'
 
-    - name: Extract Project ZIP & Fix Styles and Attributes
+    - name: Extract Project ZIP & Apply Clean Resource Fixes
       run: |
         set -e
         ZIP_FILE=$(find . -maxdepth 1 -iname "*.zip" | head -n 1)
@@ -47,11 +47,11 @@ jobs:
         mkdir -p app/src/main/res/values
         mkdir -p app/src/main/res/color
 
-        # 1. Standard XML rules
+        # 1. Rules
         echo '<?xml version="1.0" encoding="utf-8"?><data-extraction-rules><cloud-backup disableIfNoEncryptionCapabilities="true"/></data-extraction-rules>' > app/src/main/res/xml/data_extraction_rules.xml
         echo '<?xml version="1.0" encoding="utf-8"?><full-backup-content/>' > app/src/main/res/xml/backup_rules.xml
 
-        # 2. Launcher & Brand icons
+        # 2. Icons
         echo '<?xml version="1.0" encoding="utf-8"?><adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android"><background android:drawable="@android:color/white"/><foreground android:drawable="@drawable/ic_rama77_brand_logo"/></adaptive-icon>' > app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
         echo '<?xml version="1.0" encoding="utf-8"?><adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android"><background android:drawable="@android:color/white"/><foreground android:drawable="@drawable/ic_rama77_brand_logo"/></adaptive-icon>' > app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
 
@@ -70,19 +70,12 @@ jobs:
         echo '<?xml version="1.0" encoding="utf-8"?><selector xmlns:android="http://schemas.android.com/apk/res/android"><item android:state_checked="true" android:color="#FF7A00"/><item android:color="#888888"/></selector>' > app/src/main/res/color/selector_nav_color.xml
         echo '<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp"><TextView android:id="@+id/menuTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#000000"/></LinearLayout>' > app/src/main/res/layout/item_funds_menu.xml
 
-        # 4. Inject styles directly into styles.xml and themes.xml
-        echo '<?xml version="1.0" encoding="utf-8"?><resources><style name="VpinBoxStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox"><item name="boxStrokeColor">#FF7A00</item></style><style name="Widget.RAMA77" parent="Widget.MaterialComponents.CardView"><item name="cardCornerRadius">12dp</item></style></resources>' > app/src/main/res/values/styles.xml
+        # 4. Pure Layout Replacement (bypasses duplicate resource collision in styles/themes)
+        find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/style="@style\/VpinBoxStyle"/style="@style\/Widget.MaterialComponents.TextInputLayout.OutlinedBox"/g' {} + || true
+        find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/style="@style\/Widget.RAMA77"/style="@style\/Widget.MaterialComponents.CardView"/g' {} + || true
+        find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/app:helperTextColor="[^"]*"/app:helperTextTextColor="#888888"/g' {} + || true
 
-        THEMES_FILE="app/src/main/res/values/themes.xml"
-        if [ -f "$THEMES_FILE" ]; then
-          sed -i 's/<\/resources>/    <style name="VpinBoxStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox"><item name="boxStrokeColor">#FF7A00<\/item><\/style>\n    <style name="Widget.RAMA77" parent="Widget.MaterialComponents.CardView"><item name="cardCornerRadius">12dp<\/item><\/style>\n<\/resources>/g' "$THEMES_FILE" || true
-        fi
-
-        # 5. Direct replacement inside layouts for safety
-        find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/VpinBoxStyle/Widget.MaterialComponents.TextInputLayout.OutlinedBox/g' {} + || true
-        find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/Widget.RAMA77/Widget.MaterialComponents.CardView/g' {} + || true
-
-        # 6. Fix strings.xml & CardView namespace
+        # 5. Fix strings.xml & CardView namespace
         STRINGS_FILE="app/src/main/res/values/strings.xml"
         if [ -f "$STRINGS_FILE" ]; then
           sed -i "s/Don't have an account?/Don\\\'t have an account?/g" "$STRINGS_FILE" || true
