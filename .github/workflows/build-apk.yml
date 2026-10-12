@@ -24,7 +24,7 @@ jobs:
       with:
         gradle-version: '8.6'
 
-    - name: Extract Project ZIP & Auto-Fix Resource References
+    - name: Extract Project ZIP & Fix Missing Styles/Attrs
       run: |
         set -e
         ZIP_FILE=$(find . -maxdepth 1 -iname "*.zip" | head -n 1)
@@ -70,13 +70,17 @@ jobs:
         echo '<?xml version="1.0" encoding="utf-8"?><selector xmlns:android="http://schemas.android.com/apk/res/android"><item android:state_checked="true" android:color="#FF7A00"/><item android:color="#888888"/></selector>' > app/src/main/res/color/selector_nav_color.xml
         echo '<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp"><TextView android:id="@+id/menuTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#000000"/></LinearLayout>' > app/src/main/res/layout/item_funds_menu.xml
 
-        # 4. Safe style creation in styles.xml (only if not already in themes.xml)
-        STYLES_FILE="app/src/main/res/values/styles.xml"
-        if [ ! -f "$STYLES_FILE" ]; then
-          echo '<?xml version="1.0" encoding="utf-8"?><resources><style name="VpinBoxStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox"><item name="boxStrokeColor">#FF7A00</item></style><style name="Widget.RAMA77" parent="Widget.MaterialComponents.CardView"><item name="cardCornerRadius">12dp</item></style></resources>' > "$STYLES_FILE"
-        fi
+        # 4. Create missing attrs.xml
+        echo '<?xml version="1.0" encoding="utf-8"?><resources><declare-styleable name="CustomAttrs"><attr name="helperTextColor" format="color|reference"/></declare-styleable></resources>' > app/src/main/res/values/attrs.xml
 
-        # 5. Fix strings.xml & CardView namespace
+        # 5. Inject styles in values/styles.xml safely
+        echo '<?xml version="1.0" encoding="utf-8"?><resources><style name="VpinBoxStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox"><item name="boxStrokeColor">#FF7A00</item></style><style name="Widget.RAMA77" parent="Widget.MaterialComponents.CardView"><item name="cardCornerRadius">12dp</item></style></resources>' > app/src/main/res/values/styles_rama.xml
+
+        # 6. Replace problematic style reference in layout files if needed
+        find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/@style\/VpinBoxStyle/@style\/Widget.MaterialComponents.TextInputLayout.OutlinedBox/g' {} + || true
+        find app/src/main/res/layout -type f -name "*.xml" -exec sed -i 's/app:helperTextColor="[^"]*"/app:helperTextTextColor="#888888"/g' {} + || true
+
+        # 7. Fix strings.xml & CardView namespace
         STRINGS_FILE="app/src/main/res/values/strings.xml"
         if [ -f "$STRINGS_FILE" ]; then
           sed -i "s/Don't have an account?/Don\\\'t have an account?/g" "$STRINGS_FILE" || true
