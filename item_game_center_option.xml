@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="5dp"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_bidding_option_card"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="12dp">
+
+        <!-- Orange Icon Badge on the Left (Screenshot 2) -->
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_orange_badge">
+
+            <ImageView
+                android:id="@+id/ivGameIcon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:contentDescription="Game Category Icon"
+                android:src="@drawable/ic_dice_1" />
+        </FrameLayout>
+
+        <!-- Game Category Title in Bold Slate-Dark Text -->
+        <TextView
+            android:id="@+id/tvGameTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_weight="1"
+            android:text="Single Digit"
+            android:textColor="@color/text_slate_dark"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <!-- Right-Aligned Arrow (>) Indicator (Screenshot 2) -->
+        <ImageView
+            android:id="@+id/ivArrowIndicator"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:contentDescription="Select"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="@color/text_slate_body" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

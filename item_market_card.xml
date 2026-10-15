@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="1dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Market Name in Bold Orange -->
+        <TextView
+            android:id="@+id/tvMarketName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DEVI MORNING"
+            android:textColor="#F16521"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Info Icon -->
+        <ImageView
+            android:id="@+id/ivMarketInfo"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="6dp"
+            android:contentDescription="Market Info"
+            android:src="@drawable/ic_info_circle_orange"
+            app:layout_constraintBottom_toBottomOf="@id/tvMarketName"
+            app:layout_constraintStart_toEndOf="@id/tvMarketName"
+            app:layout_constraintTop_toTopOf="@id/tvMarketName" />
+
+        <!-- Rounded Grey Play Button (Screenshot 1: solid grey rounded button with Play text) -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnPlayMarket"
+            android:layout_width="96dp"
+            android:layout_height="34dp"
+            android:background="@drawable/bg_play_button_grey"
+            android:drawableStart="@drawable/ic_play_arrow"
+            android:paddingHorizontal="16dp"
+            android:text="Play"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Pana Result Numbers: e.g. 480-29-234 -->
+        <TextView
+            android:id="@+id/tvMarketResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="480-29-234"
+            android:textColor="#1F2937"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvMarketName" />
+
+        <!-- Open Bids and Close Bids Timing -->
+        <TextView
+            android:id="@+id/tvOpenTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Open Bids : 08:55 AM"
+            android:textColor="#4B5563"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvMarketResult" />
+
+        <TextView
+            android:id="@+id/tvCloseTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Close Bids : 09:55 AM"
+            android:textColor="#4B5563"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvOpenTime" />
+
+        <!-- Status Tag (Closed for Today in bold red / Running for Open in green) -->
+        <TextView
+            android:id="@+id/tvMarketStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Closed for Today"
+            android:textColor="#DC2626"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/tvCloseTime"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

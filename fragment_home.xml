@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F5F7">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="24dp">
+
+        <!-- Notice Banner: Light peach tint with italicized deposit limit notice (Screenshot 1) -->
+        <TextView
+            android:id="@+id/tvDepositBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_notice_banner"
+            android:gravity="center"
+            android:paddingVertical="9dp"
+            android:paddingHorizontal="16dp"
+            android:text="@string/min_deposit_limit"
+            android:textColor="#2D2522"
+            android:textSize="13sp"
+            android:textStyle="italic" />
+
+        <!-- Quick Action Buttons Row 1: Call Now & Whatsapp (White rounded pills with orange border) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnCallNow"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_action_pill_white_orange"
+                android:drawableStart="@drawable/ic_call_orange"
+                android:paddingHorizontal="20dp"
+                android:text="@string/call_now"
+                android:textAllCaps="false"
+                android:textColor="#F16521"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnWhatsapp"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_action_pill_white_orange"
+                android:drawableStart="@drawable/ic_whatsapp_green"
+                android:paddingHorizontal="20dp"
+                android:text="@string/whatsapp"
+                android:textAllCaps="false"
+                android:textColor="#F16521"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Quick Action Buttons Row 2: Bombay Starline & Bombay Jackpot (Solid orange filled pills) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnBombayStarline"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_action_pill_orange"
+                android:text="@string/bombay_starline"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnBombayJackpot"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_action_pill_orange"
+                android:text="@string/bombay_jackpot"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Markets List -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMarkets"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="12dp"
+            android:nestedScrollingEnabled="false" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

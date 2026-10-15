@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EDEDED"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Available Balance & Quick Actions Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardWalletBalance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="3dp"
+            app:cardBackgroundColor="@color/card_background">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Available Balance"
+                    android:textColor="#6B7280"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tvFundsBalance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="₹753"
+                    android:textColor="#1F2937"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnAddCash"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:text="Add Cash"
+                        android:textColor="#FFFFFF"
+                        app:backgroundTint="#16A34A"
+                        app:cornerRadius="8dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnWithdrawCash"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        android:text="Withdraw"
+                        android:textColor="#FFFFFF"
+                        app:backgroundTint="#EF4444"
+                        app:cornerRadius="8dp" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Starline Result Ticker Notification Pill -->
+        <TextView
+            android:id="@+id/tvStarlineTicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_white_rounded_card"
+            android:drawableStart="@drawable/ic_starline_small"
+            android:drawablePadding="8dp"
+            android:padding="12dp"
+            android:text="Starline 02:30 PM   158-4"
+            android:textColor="#1F2937"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!-- 1. Add Funds -->
+        <include
+            android:id="@+id/itemAddFunds"
+            layout="@layout/item_funds_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+        <!-- 2. Add Funds History -->
+        <include
+            android:id="@+id/itemAddFundsHistory"
+            layout="@layout/item_funds_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+
+        <!-- 3. Withdraw Funds -->
+        <include
+            android:id="@+id/itemWithdrawFunds"
+            layout="@layout/item_funds_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+
+        <!-- 4. Withdraw Funds History -->
+        <include
+            android:id="@+id/itemWithdrawFundsHistory"
+            layout="@layout/item_funds_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+
+        <!-- 5. Add Bank Details -->
+        <include
+            android:id="@+id/itemAddBankDetails"
+            layout="@layout/item_funds_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+
+        <!-- 6. Bank Details History -->
+        <include
+            android:id="@+id/itemBankDetailsHistory"
+            layout="@layout/item_funds_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+
+    </LinearLayout>
+</ScrollView>

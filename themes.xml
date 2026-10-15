@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base Material 3 Application Theme -->
+    <style name="Theme.RAMA77" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary_orange</item>
+        <item name="colorPrimaryVariant">@color/primary_orange_dark</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">@color/primary_orange</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="colorSurface">@color/surface_card</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:statusBarColor">@color/primary_orange</item>
+        <item name="android:navigationBarColor">#1E1E24</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- Fullscreen / Clean NoActionBar Theme (100% Material 3 Compatible) -->
+    <style name="Theme.RAMA77.Fullscreen" parent="Theme.RAMA77">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- NoActionBar Theme directly extending Theme.Material3.DayNight.NoActionBar -->
+    <style name="Theme.RAMA77.NoActionBar" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary_orange</item>
+        <item name="colorPrimaryVariant">@color/primary_orange_dark</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">@color/primary_orange</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="colorSurface">@color/surface_card</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:statusBarColor">@color/primary_orange</item>
+        <item name="android:navigationBarColor">#1E1E24</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- CardView Style (Compatible with MaterialComponents and Material3) -->
+    <style name="Widget.MaterialComponents.CardView" parent="CardView" />
+    <style name="Widget.MaterialComponents.CardView.RAMA77" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">3dp</item>
+        <item name="cardBackgroundColor">@color/surface_card</item>
+    </style>
+
+    <!-- Widget.RAMA77 aliases directly to CardView for compatibility -->
+    <style name="Widget.RAMA77" parent="Widget.MaterialComponents.CardView" />
+    <style name="Widget.RAMA77.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">3dp</item>
+        <item name="cardBackgroundColor">@color/surface_card</item>
+    </style>
+
+    <!-- MPIN 4-Box Input Style -->
+    <style name="MpinBoxStyle">
+        <item name="android:layout_width">52dp</item>
+        <item name="android:layout_height">52dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_mpin_box</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <!-- VpinBoxStyle replaced with Widget.MaterialComponents.TextInputLayout.OutlinedBox -->
+    <style name="VpinBoxStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/primary_orange</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+    </style>
+
+    <!-- Lottie View Style -->
+    <style name="Widget.RAMA77.Lottie" parent="android:Widget">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:adjustViewBounds">true</item>
+    </style>
+</resources>

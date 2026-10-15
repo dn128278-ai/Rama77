@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- RAMA77 Signature Brand Orange Palette (#FF7A00) -->
+    <color name="primary_orange">#FF7A00</color>
+    <color name="primary_orange_dark">#E06A00</color>
+    <color name="primary_orange_light">#FFF4E6</color>
+    <color name="primary_orange_glow">#33FF7A00</color>
+    <color name="amber_gradient_start">#FF7A00</color>
+    <color name="amber_gradient_end">#E06A00</color>
+
+    <!-- Notice Banner (Light orange background tint with Rs. 300 deposit notice) -->
+    <color name="notice_banner_bg">#FFEBD4</color>
+    <color name="notice_banner_border">#FFD6A8</color>
+    <color name="notice_banner_text">#2D2522</color>
+
+    <!-- Pure White & Clean Surfaces -->
+    <color name="pure_white">#FFFFFF</color>
+    <color name="background_light">#F8F9FA</color>
+    <color name="surface_card">#FFFFFF</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="border_card">#E2E8F0</color>
+    <color name="wallet_pill_bg">#F1F5F9</color>
+    <color name="wallet_pill_border">#E2E8F0</color>
+
+    <!-- Slate Grey Typography Colors -->
+    <color name="text_slate_dark">#1E293B</color>
+    <color name="text_slate_body">#475569</color>
+    <color name="text_slate_muted">#64748B</color>
+    <color name="text_primary">#1E293B</color>
+    <color name="text_secondary">#475569</color>
+    <color name="text_muted">#64748B</color>
+    <color name="text_white">#FFFFFF</color>
+
+    <!-- Luxury Gold & VIP Badges -->
+    <color name="gold_metallic">#D4AF37</color>
+    <color name="gold_bright">#FFC01E</color>
+    <color name="gold_soft">#F5D77F</color>
+    <color name="vip_crown">#AA7C11</color>
+
+    <!-- Status Badges & Accents -->
+    <color name="status_closed">#DC2626</color>
+    <color name="status_closed_bg">#FEE2E2</color>
+    <color name="status_running">#16A34A</color>
+    <color name="status_running_bg">#DCFCE7</color>
+    <color name="status_pending">#F59E0B</color>
+
+    <!-- Passbook / Table Header -->
+    <color name="table_header_bg">#FF7A00</color>
+    <color name="green_amount">#16A34A</color>
+    <color name="red_amount">#DC2626</color>
+
+    <!-- Form Helper & Validation Colors -->
+    <color name="success_green">#16A34A</color>
+    <color name="helper_text_color">#16A34A</color>
+    <color name="input_stroke_default">#E2E8F0</color>
+    <color name="input_stroke_focused">#FF7A00</color>
+
+    <!-- Game Center & Bazaar Palette -->
+    <color name="game_center_bg">#F8F9FA</color>
+    <color name="game_center_card">#FFFFFF</color>
+    <color name="jackpot_purple">#6D28D9</color>
+    <color name="starline_navy">#1E293B</color>
+</resources>

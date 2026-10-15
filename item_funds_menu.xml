@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardFundsMenu"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/card_background"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <!-- Action Icon -->
+        <ImageView
+            android:id="@+id/menuIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:contentDescription="Action Icon"
+            android:src="@drawable/ic_wallet_funds" />
+
+        <!-- Action Title -->
+        <TextView
+            android:id="@+id/menuTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:text="Action Item"
+            android:textColor="#1F2937"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <!-- Arrow Indicator -->
+        <ImageView
+            android:id="@+id/menuArrow"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:contentDescription="Arrow Indicator"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="#9CA3AF" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

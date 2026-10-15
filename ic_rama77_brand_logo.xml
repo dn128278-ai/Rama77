@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <!-- Outer Glow Circle -->
+    <path
+        android:fillColor="#1AF16521"
+        android:pathData="M60,60m-58,0a58,58 0,1 1,116 0a58,58 0,1 1,-116 0" />
+    <!-- Gradient Background Shield -->
+    <path
+        android:fillColor="#F16521"
+        android:pathData="M60,10 L98,28 L98,68 C98,88 80,104 60,110 C40,104 22,88 22,68 L22,28 Z" />
+    <!-- Inner Dark Core -->
+    <path
+        android:fillColor="#1E1E24"
+        android:pathData="M60,18 L90,32 L90,66 C90,82 76,96 60,101 C44,96 30,82 30,66 L30,32 Z" />
+    <!-- Crown at Top -->
+    <path
+        android:fillColor="#FFC01E"
+        android:pathData="M44,42 L52,50 L60,38 L68,50 L76,42 L74,58 L46,58 Z" />
+    <!-- Stylized "77" and "R" Gold Details -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M46,64 L58,64 L58,68 L52,82 L47,82 L52,70 L46,70 Z" />
+    <path
+        android:fillColor="#FFC01E"
+        android:pathData="M62,64 L74,64 L74,68 L68,82 L63,82 L68,70 L62,70 Z" />
+</vector>
